@@ -3,16 +3,44 @@ from conexionBD import *
 class Model:
   
     @staticmethod
-    def crear(marca, color, modelo, velocidad, caballaje, plazas):
+    def crear_auto(marca, color, modelo, velocidad, caballaje, plazas):
         try:
           cursor.execute(
-            "insert into autos values(NULL,%s,%s,%s,%s,%s)",
+            "insert into autos values(NULL,%s,%s,%s,%s,%s,%s)",
             (marca, color, modelo, velocidad,caballaje, plazas)
           )
           conexion.commit()
           return True
         except:
           return False
+        
+    @staticmethod
+    def crear_camioneta(marca, color, modelo, velocidad, caballaje, plazas, traccion, cerrada):
+        try:
+          cursor.execute(
+            "insert into camionetas values(NULL,%s,%s,%s,%s,%s,%s,%s,%s)",
+            (marca, color, modelo, velocidad,caballaje, plazas, traccion, cerrada)
+          )
+          conexion.commit()
+          return True
+        except:
+          return False
+        
+
+    @staticmethod
+    def consultar_autos():
+        try:
+            cursor.execute("Select * from autos")
+            
+            return cursor.fetchall()
+        except:
+            print("\n\t..::No hay autos registrados::..")
+            return []
+            
+
+
+
+
 
     @staticmethod
     def mostrar(usuario_id):
@@ -26,28 +54,34 @@ class Model:
           return []
 
     @staticmethod
-    def actualizar(id, titulo, descripcion):
+    def actualizar_auto(marca, color, modelo, velocidad, caballaje, plazas, id):
       try:
         cursor.execute(
-            "update notas set titulo=%s,descripcion=%s where id=%s",
-            (titulo,descripcion,id)
+            "update autos set marca=%s,color=%s, modelo=%s, velocidad=%s, caballaje=%s, plazas=%s where id=%s",
+            (marca, color, modelo, velocidad, caballaje, plazas, id)
         )
         conexion.commit()
-        if cursor.rowcount>0:
-          return True
-        else:
-          return False
+        return True
       except: 
         return False
     
     @staticmethod
     def eliminar(id):
         try:
-          cursor.execute(
-            "delete from notas where id=%s",
-            (id,)
-          ) 
-          conexion.commit() 
-          return True  
-        except:    
-          return False
+            cursor.execute(
+                "delete from autos where id=%s",(id,)
+            )
+            conexion.commit()
+            return True
+        except:
+            return False
+        
+    @staticmethod
+    def check(id):
+        try:
+            cursor.execute(
+                "select * from autos where id=%s",(id,)
+            )
+            return cursor.fetchone()
+        except:
+            return False

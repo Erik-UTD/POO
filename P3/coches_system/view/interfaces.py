@@ -23,6 +23,14 @@ class View:
             i.destroy()
 
     @staticmethod
+    def checar_cerrada(cerrada):
+        if cerrada=="SI":
+            cerrada=True
+        else:
+            cerrada=False  
+        return cerrada
+
+    @staticmethod
     def menu_principal(ventana):
         View.borrar_pantalla(ventana)
         lbltit=Label(ventana,text=".:: Menú Principal ::.")
@@ -105,18 +113,21 @@ class View:
         txt_modelo.pack(pady=5)
 
         velocidad=IntVar()
-        lbl_velocidad=Label(ventana,text="Velocidad", textvariable=velocidad).pack(pady=5)
-        txt_velocidad=Entry(ventana)
+        lbl_velocidad=Label(ventana,text="Velocidad").pack(pady=5)
+        txt_velocidad=Entry(ventana, textvariable=velocidad)
         txt_velocidad.pack(pady=5)
 
+        caballaje=IntVar()
         lbl_caballaje=Label(ventana,text="Caballaje").pack(pady=5)
-        txt_caballaje=Entry(ventana)
+        txt_caballaje=Entry(ventana, textvariable=caballaje)
         txt_caballaje.pack(pady=5)
 
+        plazas=IntVar()
         lbl_plazas=Label(ventana,text="Plazas").pack(pady=5)
-        txt_plazas=Entry(ventana)
+        txt_plazas=Entry(ventana, textvariable=plazas)
         txt_plazas.pack(pady=5)
-        btn_crear=Button(ventana,text=f"Crear auto",command=lambda: controlador1.Controlador.crear_auto(txt_marca.get(),txt_color.get(),txt_modelo.get(),txt_velocidad.get(),txt_caballaje.get(),txt_plazas.get()))
+
+        btn_crear=Button(ventana,text=f"Crear auto",command=lambda: controlador1.Controlador.crear_auto(txt_marca.get(),txt_color.get(),txt_modelo.get(),velocidad.get(),caballaje.get(),plazas.get()))
         btn_crear.pack(pady=5)
 
         btn_volver=Button(ventana,text="5.- Volver",command=lambda:View.menu_principal(ventana))
@@ -141,16 +152,19 @@ class View:
         txt_modelo=Entry(ventana)
         txt_modelo.pack(pady=5)
 
+        velocidad=IntVar()
         lbl_velocidad=Label(ventana,text="Velocidad").pack(pady=5)
-        txt_velocidad=Entry(ventana)
+        txt_velocidad=Entry(ventana, textvariable=velocidad)
         txt_velocidad.pack(pady=5)
 
+        caballaje=IntVar()
         lbl_caballaje=Label(ventana,text="Caballaje").pack(pady=5)
-        txt_caballaje=Entry(ventana)
+        txt_caballaje=Entry(ventana, textvariable=caballaje)
         txt_caballaje.pack(pady=5)
 
+        plazas=IntVar()
         lbl_plazas=Label(ventana,text="Plazas").pack(pady=5)
-        txt_plazas=Entry(ventana)
+        txt_plazas=Entry(ventana, textvariable=plazas)
         txt_plazas.pack(pady=5)
 
         lbl_traccion=Label(ventana,text="Traccion").pack(pady=5)
@@ -160,10 +174,12 @@ class View:
         lbl_cerrada=Label(ventana,text="Cerrada").pack(pady=5)
         txt_cerrada=Entry(ventana)
         txt_cerrada.pack(pady=5)
+        cerrada=txt_cerrada.get()
+        checar_cerrada=View.checar_cerrada(cerrada)
 
 
 
-        btn_crear=Button(ventana,text=f"Crear camioneta",command=lambda: controlador1.Controlador.crear_coche(txt_marca.get(),txt_color.get(),txt_modelo.get(),txt_velocidad.get(),txt_caballaje.get(),txt_plazas.get()))
+        btn_crear=Button(ventana,text=f"Crear camioneta",command=lambda: controlador1.Controlador.crear_camioneta(txt_marca.get(),txt_color.get(),txt_modelo.get(), velocidad.get(), caballaje.get(), plazas.get(), txt_traccion.get(), checar_cerrada))
         btn_crear.pack(pady=5)
         btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
         btn_volver.pack(pady=5)
@@ -215,9 +231,19 @@ class View:
         View.borrar_pantalla(ventana)
         lbltit=Label(ventana,text=f".:: Estos son los autos disponibles ::.")
         lbltit.pack(pady=10)
-        lbl_contenido=Label(ventana,text=f"En el entry de abajo se veran los autos disponibles ").pack(pady=5)
-        txt_contenido=Entry(ventana)
-        txt_contenido.pack(pady=5)
+        registros=controlador1.Controlador.mostrar_autos()
+        filas=""
+        num_auto=1
+        if registros:
+            for i in registros:
+                filas=filas+f"Auto: {num_auto} \n ID: {i[0]}.- Marca: {i[1]} Color: {i[2]} Modelo: {i[3]} Velocidad: {i[4]} Caballaje: {i[5]} Plazas: {i[6]} \n\n "
+                num_auto=num_auto+1
+        else:
+            messagebox.showerror(title="Autos",message=f"...¡No se encontraron autos registrados, intente de nuevo!...")
+
+        lblnotas=Label(ventana,text=f"{filas}")
+        lblnotas.pack(pady=5)
+
         btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
         btn_volver.pack(pady=5)
 
@@ -225,9 +251,19 @@ class View:
         View.borrar_pantalla(ventana)
         lbltit=Label(ventana,text=f".:: Estos son las camionetas disponibles ::.")
         lbltit.pack(pady=10)
-        lbl_contenido=Label(ventana,text=f"En el entry de abajo se veran los autos disponibles ").pack(pady=5)
-        txt_contenido=Entry(ventana)
-        txt_contenido.pack(pady=5)
+        registros=controlador1.Controlador.mostrar_autos()
+        filas=""
+        num_auto=1
+        if registros:
+            for i in registros:
+                filas=filas+f"Auto: {num_auto} \n ID: {i[0]}.- Marca: {i[1]} Color: {i[2]} Modelo: {i[3]} Velocidad: {i[4]} Caballaje: {i[5]} Plazas: {i[6]} Traccion: {i[7]} Cerrada: {i[8]}  \n\n "
+                num_auto=num_auto+1
+        else:
+            messagebox.showerror(title="Autos",message=f"...¡No se encontraron autos registrados, intente de nuevo!...")
+
+        lblnotas=Label(ventana,text=f"{filas}")
+        lblnotas.pack(pady=5)
+
         btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
         btn_volver.pack(pady=5)
 
@@ -244,47 +280,73 @@ class View:
 
 
 # :::::::::::::::::: MENUS DE CAMBIAR :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
     @staticmethod
     def cambiar_autos(ventana):
+        View.borrar_pantalla(ventana)
+        id=IntVar()
+        lbltit=Label(ventana,text=".::Modificar un auto::.")
+        lbltit.pack(pady=5)
+        lblind=Label(ventana,text=".::ID del auto registrado: ::.")
+        lblind.pack(pady=5)
+        cajaid=Entry(ventana,width=5,textvariable=id,justify="right")
+        cajaid.focus()
+        cajaid.pack(pady=5)
+        btneli=Button(ventana,text="Buscar",command=lambda:controlador1.Controlador.check_actualizar_auto(ventana, id.get()))
+        btneli.pack(pady=5)
+        btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
+        btn_volver.pack(pady=5)
+
+
+    @staticmethod
+    def cambiar_autos_2(ventana,respuesta, id):
         View.borrar_pantalla(ventana)
         lbl_id=Label(ventana,text=f"ID: ")
         lbl_id.pack(pady=10)
         txt_id=Entry(ventana)
+        txt_id.insert(0, id)
         txt_id.config(state="readonly")
         txt_id.pack(pady=5)
 
         lbl_marca=Label(ventana,text="Nueva marca").pack(pady=5)
         txt_marca=Entry(ventana)
+        txt_marca.insert(0, respuesta[1])
         txt_marca.focus()
         txt_marca.pack(pady=5)
 
-        lbl_color=Label(ventana,text="Nuevo olor").pack(pady=5)
+        lbl_color=Label(ventana,text="Nuevo color").pack(pady=5)
         txt_color=Entry(ventana)
+        txt_color.insert(0, respuesta[2])
         txt_color.pack(pady=5)
 
         lbl_modelo=Label(ventana,text="Nuevo Modelo").pack(pady=5)
         txt_modelo=Entry(ventana)
+        txt_modelo.insert(0, respuesta[3])
         txt_modelo.pack(pady=5)
 
+        velocidad=IntVar()
         lbl_velocidad=Label(ventana,text="Nueva Velocidad").pack(pady=5)
-        txt_velocidad=Entry(ventana)
+        txt_velocidad=Entry(ventana, textvariable=velocidad)
+        txt_velocidad.insert(0, respuesta[4])
         txt_velocidad.pack(pady=5)
 
+        caballaje=IntVar()
         lbl_caballaje=Label(ventana,text="Nuevo aballaje").pack(pady=5)
-        txt_caballaje=Entry(ventana)
+        txt_caballaje=Entry(ventana, textvariable=caballaje)
+        txt_caballaje.insert(0, respuesta[5])
         txt_caballaje.pack(pady=5)
 
+        plazas=IntVar()
         lbl_plazas=Label(ventana,text="Nuevas Plazas").pack(pady=5)
-        txt_plazas=Entry(ventana)
+        txt_plazas=Entry(ventana, textvariable=plazas)
+        txt_plazas.insert(0, respuesta[6])
         txt_plazas.pack(pady=5)
 
 
 
-        btn_cambiar=Button(ventana,text=f"Cambiar auto",command= controlador1)
+        btn_cambiar=Button(ventana,text=f"Cambiar auto",command=controlador1.Controlador.actualizar_auto(txt_marca.get(),txt_color.get(),txt_modelo.get(),velocidad.get(),caballaje.get(),plazas.get(), id))
         btn_cambiar.pack(pady=5)
 
-        btn_volver=Button(ventana,text="5.- Volver",command=lambda:View.menu_principal(ventana))
+        btn_volver=Button(ventana,text=" Volver",command=lambda:View.menu_principal(ventana))
         btn_volver.pack(pady=5)
 
     @staticmethod
@@ -375,15 +437,36 @@ class View:
     @staticmethod
     def borrar_autos(ventana):
         View.borrar_pantalla(ventana)
-        lbltit=Label(ventana,text=f".:: Menu de eliminacion de autos ::.")
-        lbltit.pack(pady=10)
-        lbl_id=Label(ventana,text=f"ID: ")
-        lbl_id.pack(pady=10)
-        txt_id=Entry(ventana).pack(pady=5)
-        btn_buscar=Button(ventana,text="Buscar",command=lambda:View.id_consultar(ventana))
-        btn_buscar.pack(pady=5)
+        id=IntVar()
+        lbltit=Label(ventana,text=".::Borrar un auto::.")
+        lbltit.pack(pady=5)
+        lblind=Label(ventana,text=".::ID del auto registrado: ::.")
+        lblind.pack(pady=5)
+        cajaid=Entry(ventana,width=5,textvariable=id,justify="right")
+        cajaid.focus()
+        cajaid.pack(pady=5)
+        btneli=Button(ventana,text="Buscar",command=lambda:controlador1.Controlador.check_eliminar_auto(ventana, id.get()))
+        btneli.pack(pady=5)
         btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
         btn_volver.pack(pady=5)
+
+    @staticmethod
+    def borrar_autos_2(ventana,id):
+        View.borrar_pantalla(ventana)
+
+        lbltit=Label(ventana,text=".::Borrar un auto::.")
+        lbltit.pack(pady=5)
+        lblind=Label(ventana,text=".::Click en eliminar para confirmar accion ::.")
+        lblind.pack(pady=5)
+        btneli=Button(ventana,text="Eliminar",command=lambda:controlador1.Controlador.eliminar_auto(id))
+        btneli.pack(pady=5)
+
+        btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
+        btn_volver.pack(pady=5)
+
+
+
+
 
     @staticmethod
     def borrar_camionetas(ventana):
