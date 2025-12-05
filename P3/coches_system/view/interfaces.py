@@ -308,9 +308,9 @@ class View:
     def cambiar_autos(ventana):
         View.borrar_pantalla(ventana)
         id=IntVar()
-        lbltit=Label(ventana,text=".::Modificar un auto::.")
+        lbltit=Label(ventana,text=".::Modificar una auto::.")
         lbltit.pack(pady=5)
-        lblind=Label(ventana,text=".::ID del auto registrado: ::.")
+        lblind=Label(ventana,text=".::ID de la camioneta auto: ::.")
         lblind.pack(pady=5)
         cajaid=Entry(ventana,width=5,textvariable=id,justify="right")
         cajaid.focus()

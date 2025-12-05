@@ -131,7 +131,7 @@ class Controlador:
     @staticmethod
     def check_actualizar_auto(ventana,id): 
         respuesta=model.Model.check(id)
-        if len(respuesta)>0:
+        if respuesta:
             interfaces.View.cambiar_autos_2(ventana,respuesta,id)
         else:
             messagebox.showinfo(message=f"ID no encontrada")
