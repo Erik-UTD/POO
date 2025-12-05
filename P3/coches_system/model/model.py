@@ -34,8 +34,17 @@ class Model:
             
             return cursor.fetchall()
         except:
-            print("\n\t..::No hay autos registrados::..")
             return []
+        
+    @staticmethod
+    def consultar_camionetas():
+        try:
+            cursor.execute("Select * from camionetas")
+            
+            return cursor.fetchall()
+        except:
+            return []
+            
             
 
 
@@ -62,8 +71,22 @@ class Model:
         )
         conexion.commit()
         return True
-      except: 
+      except:   
         return False
+
+    @staticmethod
+    def actualizar_camioneta(marca, color, modelo, velocidad, caballaje, plazas, traccion, cerrada, id):
+      try:
+        cursor.execute(
+            "update camionetas set marca=%s,color=%s, modelo=%s, velocidad=%s, caballaje=%s, plazas=%s, traccion=%s, cerrada=%s where id=%s",
+            (marca, color, modelo, velocidad, caballaje, plazas, traccion, cerrada, id)
+        )
+        conexion.commit()
+        return True
+      except:   
+        return False     
+
+
     
     @staticmethod
     def eliminar(id):
@@ -77,10 +100,31 @@ class Model:
             return False
         
     @staticmethod
+    def eliminar_camioneta(id):
+        try:
+            cursor.execute(
+                "delete from camionetas where id=%s",(id,)
+            )
+            conexion.commit()
+            return True
+        except:
+            return False
+        
+    @staticmethod
     def check(id):
         try:
             cursor.execute(
                 "select * from autos where id=%s",(id,)
+            )
+            return cursor.fetchone()
+        except:
+            return False
+        
+    @staticmethod
+    def check_camioneta(id):
+        try:
+            cursor.execute(
+                "select * from camionetas where id=%s",(id,)
             )
             return cursor.fetchone()
         except:
