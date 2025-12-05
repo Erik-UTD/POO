@@ -186,41 +186,54 @@ class View:
 
     @staticmethod
     def insertar_camiones(ventana):
-            lbl_marca=Label(ventana,text="Marca").pack(pady=5)
-            txt_marca=Entry(ventana)
-            txt_marca.focus()
-            txt_marca.pack(pady=5)
+        View.borrar_pantalla(ventana)
+        lbltit=Label(ventana,text=f".:: Vamos a añadir un camion ::.")
+        lbltit.pack(pady=10)
 
-            lbl_color=Label(ventana,text="Color").pack(pady=5)
-            txt_color=Entry(ventana)
-            txt_color.pack(pady=5)
+        lbl_marca=Label(ventana,text="Marca").pack(pady=5)
+        txt_marca=Entry(ventana)
+        txt_marca.focus()
+        txt_marca.pack(pady=5)
 
-            lbl_modelo=Label(ventana,text="Modelo").pack(pady=5)
-            txt_modelo=Entry(ventana)
-            txt_modelo.pack(pady=5)
+        lbl_color=Label(ventana,text="Color").pack(pady=5)
+        txt_color=Entry(ventana)
+        txt_color.pack(pady=5)
 
-            lbl_velocidad=Label(ventana,text="Velocidad").pack(pady=5)
-            txt_velocidad=Entry(ventana)
-            txt_velocidad.pack(pady=5)
+        lbl_modelo=Label(ventana,text="Modelo").pack(pady=5)
+        txt_modelo=Entry(ventana)
+        txt_modelo.pack(pady=5)
 
-            lbl_caballaje=Label(ventana,text="Caballaje").pack(pady=5)
-            txt_caballaje=Entry(ventana)
-            txt_caballaje.pack(pady=5)
+        velocidad=IntVar()
+        lbl_velocidad=Label(ventana,text="Velocidad").pack(pady=5)
+        txt_velocidad=Entry(ventana, textvariable=velocidad)
+        txt_velocidad.pack(pady=5)
 
-            lbl_plazas=Label(ventana,text="Plazas").pack(pady=5)
-            txt_plazas=Entry(ventana)
-            txt_plazas.pack(pady=5)
+        caballaje=IntVar()
+        lbl_caballaje=Label(ventana,text="Caballaje").pack(pady=5)
+        txt_caballaje=Entry(ventana, textvariable=caballaje)
+        txt_caballaje.pack(pady=5)
 
-            lbl_eje=Label(ventana,text="Eje").pack(pady=5)
-            txt_eje=Entry(ventana)
-            txt_eje.pack(pady=5)
+        plazas=IntVar()
+        lbl_plazas=Label(ventana,text="Plazas").pack(pady=5)
+        txt_plazas=Entry(ventana, textvariable=plazas)
+        txt_plazas.pack(pady=5)
 
-            lbl_capCarga=Label(ventana,text="Capacidad de Carga").pack(pady=5)
-            txt_capCarga=Entry(ventana)
-            txt_capCarga.pack(pady=5)
+        eje=IntVar()
+        lbl_eje=Label(ventana,text="Eje").pack(pady=5)
+        txt_eje=Entry(ventana, textvariable=eje)
+        txt_eje.pack(pady=5)
 
-            btn_crear=Button(ventana,text=f"Crear camion",command= controlador1)
-            btn_crear.pack(pady=5)
+        cap_carga=IntVar()
+        lbl_capCarga=Label(ventana,text="Capacidad de Carga").pack(pady=5)
+        txt_capCarga=Entry(ventana, textvariable=cap_carga)
+        txt_capCarga.pack(pady=5)
+
+
+        btn_crear=Button(ventana,text=f"Crear camion",command=lambda: controlador1.Controlador.crear_camion(txt_marca.get(),txt_color.get(),txt_modelo.get(), velocidad.get(), caballaje.get(), plazas.get(), eje.get(), cap_carga.get()))
+        btn_crear.pack(pady=5)
+
+        btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
+        btn_volver.pack(pady=5)
 
 
 
@@ -271,11 +284,22 @@ class View:
         View.borrar_pantalla(ventana)
         lbltit=Label(ventana,text=f".:: Estos son los camiones disponibles ::.")
         lbltit.pack(pady=10)
-        lbl_contenido=Label(ventana,text=f"En el entry de abajo se veran los autos disponibles ").pack(pady=5)
-        txt_contenido=Entry(ventana)
-        txt_contenido.pack(pady=5)
+        registros=controlador1.Controlador.mostrar_camiones()
+        filas=""
+        num_auto=1
+        if registros:
+            for i in registros:
+                filas=filas+f"Camioneta: {num_auto} \n ID: {i[0]}.- Marca: {i[1]} Color: {i[2]} Modelo: {i[3]} Velocidad: {i[4]} Caballaje: {i[5]} Plazas: {i[6]} Eje: {i[7]} Capacidad de carga: {i[8]}  \n\n "
+                num_auto=num_auto+1
+        else:
+            messagebox.showerror(title="Camiones",message=f"...¡No se encontraron camiones registrados, intente de nuevo!...")
+
+        lblnotas=Label(ventana,text=f"{filas}")
+        lblnotas.pack(pady=5)
+
         btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
         btn_volver.pack(pady=5)
+
 
 
 
@@ -435,43 +459,84 @@ class View:
         btn_volver=Button(ventana,text="5.- Volver",command=lambda:View.menu_principal(ventana))
         btn_volver.pack(pady=5)
 
+
     @staticmethod
     def cambiar_camiones(ventana):
         View.borrar_pantalla(ventana)
+        id=IntVar()
+        lbltit=Label(ventana,text=".::Modificar un camion::.")
+        lbltit.pack(pady=5)
+        lblind=Label(ventana,text=".::ID del camion registrada: ::.")
+        lblind.pack(pady=5)
+        cajaid=Entry(ventana,width=5,textvariable=id,justify="right")
+        cajaid.focus()
+        cajaid.pack(pady=5)
+        btneli=Button(ventana,text="Buscar",command=lambda:controlador1.Controlador.check_actualizar_camion(ventana, id.get()))
+        btneli.pack(pady=5)
+        btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
+        btn_volver.pack(pady=5)
+
+
+
+    @staticmethod
+    def cambiar_camiones_2(ventana, respuesta, id):
+        View.borrar_pantalla(ventana)
+
+        lbl_id=Label(ventana,text=f"ID: ")
+        lbl_id.pack(pady=10)
+        txt_id=Entry(ventana)
+        txt_id.insert(0, id)
+        txt_id.config(state="readonly")
+        txt_id.pack(pady=5)
+
+
         lbl_marca=Label(ventana,text="Nueva marca").pack(pady=5)
         txt_marca=Entry(ventana)
+        txt_marca.insert(0, respuesta[1])
         txt_marca.focus()
         txt_marca.pack(pady=5)
 
-        lbl_color=Label(ventana,text="Nuevo olor").pack(pady=5)
+        lbl_color=Label(ventana,text="Nuevo color").pack(pady=5)
         txt_color=Entry(ventana)
+        txt_color.insert(0, respuesta[2])
         txt_color.pack(pady=5)
 
         lbl_modelo=Label(ventana,text="Nuevo Modelo").pack(pady=5)
         txt_modelo=Entry(ventana)
+        txt_modelo.insert(0, respuesta[3])
         txt_modelo.pack(pady=5)
 
+        velocidad=IntVar()
         lbl_velocidad=Label(ventana,text="Nueva Velocidad").pack(pady=5)
-        txt_velocidad=Entry(ventana)
+        txt_velocidad=Entry(ventana, textvariable=velocidad)
+        txt_velocidad.insert(0, respuesta[4])
         txt_velocidad.pack(pady=5)
 
-        lbl_caballaje=Label(ventana,text="Nuevo aballaje").pack(pady=5)
-        txt_caballaje=Entry(ventana)
+        caballaje=IntVar()
+        lbl_caballaje=Label(ventana,text="Nuevo caballaje").pack(pady=5)
+        txt_caballaje=Entry(ventana, textvariable=caballaje)
+        txt_caballaje.insert(0, respuesta[5])
         txt_caballaje.pack(pady=5)
 
+        plazas=IntVar()
         lbl_plazas=Label(ventana,text="Nuevas Plazas").pack(pady=5)
-        txt_plazas=Entry(ventana)
+        txt_plazas=Entry(ventana, textvariable=plazas)
+        txt_plazas.insert(0, respuesta[6])
         txt_plazas.pack(pady=5)
 
+        eje=IntVar()
         lbl_eje=Label(ventana,text="Nuevo Eje").pack(pady=5)
-        txt_eje=Entry(ventana)
+        txt_eje=Entry(ventana, textvariable=eje)
+        txt_eje.insert(0, respuesta[7])
         txt_eje.pack(pady=5)
 
+        cap_carga=IntVar()
         lbl_capCarga=Label(ventana,text="Nueva Capacidad de Carga").pack(pady=5)
-        txt_capCarga=Entry(ventana)
+        txt_capCarga=Entry(ventana, textvariable= cap_carga)
+        txt_capCarga.insert(0, respuesta[8])
         txt_capCarga.pack(pady=5)
 
-        btn_cambiar=Button(ventana,text=f"Cambiar camiones",command= controlador1)
+        btn_cambiar=Button(ventana,text=f"Cambiar auto",command=lambda:controlador1.Controlador.actualizar_camion(txt_marca.get(),txt_color.get(),txt_modelo.get(),velocidad.get(),caballaje.get(),plazas.get(),eje.get(), cap_carga.get(), id))
         btn_cambiar.pack(pady=5)
 
         btn_volver=Button(ventana,text="5.- Volver",command=lambda:View.menu_principal(ventana))
@@ -547,13 +612,31 @@ class View:
     @staticmethod
     def borrar_camiones(ventana):
         View.borrar_pantalla(ventana)
-        lbltit=Label(ventana,text=f".:: Menu de eliminacion de camiones ::.")
-        lbltit.pack(pady=10)
-        lbl_id=Label(ventana,text=f"ID: ")
-        lbl_id.pack(pady=10)
-        txt_id=Entry(ventana).pack(pady=5)
-        btn_buscar=Button(ventana,text="Buscar",command=lambda:View.id_consultar(ventana))
-        btn_buscar.pack(pady=5)
+        id=IntVar()
+        lbltit=Label(ventana,text=".::Borrar un camion ::.")
+        lbltit.pack(pady=5)
+        lblind=Label(ventana,text=".::ID del camion registrado: ::.")
+        lblind.pack(pady=5)
+        cajaid=Entry(ventana,width=5,textvariable=id,justify="right")
+        cajaid.focus()
+        cajaid.pack(pady=5)
+        btneli=Button(ventana,text="Buscar",command=lambda:controlador1.Controlador.check_eliminar_camion(ventana, id.get()))
+        btneli.pack(pady=5)
+        btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
+        btn_volver.pack(pady=5)
+
+
+    @staticmethod
+    def borrar_camiones_2(ventana,id):
+        View.borrar_pantalla(ventana)
+
+        lbltit=Label(ventana,text=".::Borrar un camion::.")
+        lbltit.pack(pady=5)
+        lblind=Label(ventana,text=".::Click en eliminar para confirmar accion ::.")
+        lblind.pack(pady=5)
+        btneli=Button(ventana,text="Eliminar",command=lambda:controlador1.Controlador.eliminar_camion(id))
+        btneli.pack(pady=5)
+
         btn_volver=Button(ventana,text="Volver",command=lambda:View.menu_principal(ventana))
         btn_volver.pack(pady=5)
 

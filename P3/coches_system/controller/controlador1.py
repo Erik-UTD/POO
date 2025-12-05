@@ -30,6 +30,14 @@ class Controlador:
             messagebox.showerror(title="Camioneta",message=f"...¡No fue posible realizar la accion, intente de nuevo!...")
 
     @staticmethod
+    def respuesta_cambiar_camion(respuesta): 
+        if respuesta:
+            messagebox.showinfo(title="Camiones",message=f"...¡Accion realizada con exito!...")
+            
+        else:
+            messagebox.showerror(title="Camiones",message=f"...¡No fue posible realizar la accion, intente de nuevo!...")
+
+    @staticmethod
     def crear_auto(marca, color, modelo,velocidad, caballaje,plazas):
         respuesta=model.Model.crear_auto(marca, color, modelo,velocidad ,caballaje, plazas)
         Controlador.respuesta_sql(respuesta)
@@ -41,6 +49,11 @@ class Controlador:
         Controlador.respuesta_sql(respuesta)
 
     @staticmethod
+    def crear_camion(marca, color, modelo,velocidad, caballaje,plazas,eje, cap_carga):
+        respuesta=model.Model.crear_camion(marca, color, modelo,velocidad ,caballaje, plazas, eje, cap_carga)
+        Controlador.respuesta_sql(respuesta)
+
+    @staticmethod
     def mostrar_autos():
         respuesta=model.Model.consultar_autos()
         return respuesta
@@ -48,6 +61,11 @@ class Controlador:
     @staticmethod
     def mostrar_camionetas():
         respuesta=model.Model.consultar_camionetas()
+        return respuesta
+    
+    @staticmethod
+    def mostrar_camiones():
+        respuesta=model.Model.consultar_camiones()
         return respuesta
     
 
@@ -126,6 +144,17 @@ class Controlador:
         else:
             messagebox.showinfo(message=f"ID no encontrada")
 
+
+    @staticmethod
+    def check_actualizar_camion(ventana,id): 
+        respuesta=model.Model.check_camion(id)
+        if respuesta:
+            interfaces.View.cambiar_camiones_2(ventana,respuesta,id)
+        else:
+            messagebox.showinfo(message=f"ID no encontrada")
+
+
+
     @staticmethod
     def check_eliminar_auto(ventana,id): 
         respuesta=model.Model.check(id)
@@ -145,6 +174,14 @@ class Controlador:
 
 
     @staticmethod
+    def check_eliminar_camion(ventana,id): 
+        respuesta=model.Model.check_camion(id)
+        if respuesta:
+            interfaces.View.borrar_camiones_2(ventana,id)
+        else:
+            messagebox.showinfo(message=f"ID no encontrada")
+
+    @staticmethod
     def eliminar_auto(id):
         respuesta=model.Model.eliminar(id)
         Controlador.respuesta_sql(respuesta)
@@ -152,6 +189,11 @@ class Controlador:
     @staticmethod
     def eliminar_camioneta(id):
         respuesta=model.Model.eliminar_camioneta(id)
+        Controlador.respuesta_sql(respuesta)
+
+    @staticmethod
+    def eliminar_camion(id):
+        respuesta=model.Model.eliminar_camion(id)
         Controlador.respuesta_sql(respuesta)
 
     @staticmethod
@@ -163,6 +205,11 @@ class Controlador:
     def actualizar_camioneta(marca, color, modelo, velocidad, caballaje, plazas, traccion, cerrada, id):
         respuesta=model.Model.actualizar_camioneta(marca, color, modelo, velocidad, caballaje, plazas, traccion, cerrada, id)
         Controlador.respuesta_cambiar_camioneta(respuesta)
+
+    @staticmethod
+    def actualizar_camion(marca, color, modelo, velocidad, caballaje, plazas, eje, cap_carga, id):
+        respuesta=model.Model.actualizar_camion(marca, color, modelo, velocidad, caballaje, plazas, eje, cap_carga, id)
+        Controlador.respuesta_cambiar_camion(respuesta)
 
 
 """
